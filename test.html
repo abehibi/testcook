@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カメラで写真を撮ろう！</title>
+</head>
+<body>
+  <h1>カメラで写真を撮ろう！</h1>
+
+  <!-- カメラの映像を表示するためのビデオタグ -->
+  <video id="video" width="300" height="200" autoplay></video>
+
+  <!-- 写真を撮るボタン -->
+  <button id="snap">写真を撮る</button>
+
+  <!-- 撮った写真を表示するための画像タグ -->
+  <canvas id="canvas" width="300" height="200"></canvas>
+
+  <script>
+    // カメラを表示するための処理
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snapButton = document.getElementById('snap');
+    const context = canvas.getContext('2d');
+
+    // カメラを使うための準備
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then((stream) => {
+        // カメラの映像をビデオタグに表示
+        video.srcObject = stream;
+      })
+      .catch((err) => {
+        console.log("カメラのエラー: " + err);
+      });
+
+    // 写真を撮るボタンがクリックされた時の処理
+    snapButton.addEventListener('click', () => {
+      // ビデオの映像をキャンバスに描く
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    });
+  </script>
+</body>
+</html>
