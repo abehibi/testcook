@@ -1,44 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>カメラで写真を撮ろう！</title>
+    <meta charset="UTF-8">
+    <title>カメラで写真を撮る</title>
 </head>
 <body>
-  <h1>カメラで写真を撮ろう！</h1>
+    <h1>📸 カメラで写真を撮る</h1>
 
-  <!-- カメラの映像を表示するためのビデオタグ -->
-  <video id="video" width="300" height="200" autoplay></video>
+    <video id="video" width="640" height="480" autoplay></video><br>
+    <button onclick="takePhoto()">📷 写真を撮る</button><br>
+    <canvas id="canvas" width="640" height="480"></canvas><br>
+    <a id="download" download="photo.png">画像を保存</a>
 
-  <!-- 写真を撮るボタン -->
-  <button id="snap">写真を撮る</button>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const download = document.getElementById('download');
 
-  <!-- 撮った写真を表示するための画像タグ -->
-  <canvas id="canvas" width="300" height="200"></canvas>
+        // カメラを起動
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            });
 
-  <script>
-    // カメラを表示するための処理
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const snapButton = document.getElementById('snap');
-    const context = canvas.getContext('2d');
-
-    // カメラを使うための準備
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then((stream) => {
-        // カメラの映像をビデオタグに表示
-        video.srcObject = stream;
-      })
-      .catch((err) => {
-        console.log("カメラのエラー: " + err);
-      });
-
-    // 写真を撮るボタンがクリックされた時の処理
-    snapButton.addEventListener('click', () => {
-      // ビデオの映像をキャンバスに描く
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-  </script>
+        // 写真を撮る
+        function takePhoto() {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const dataURL = canvas.toDataURL('image/png');
+            download.href = dataURL;
+        }
+    </script>
 </body>
 </html>
